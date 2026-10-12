@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EduGenie</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --primary: #4f46e5;
+      --primary-dark: #3730a3;
+      --secondary: #eef2ff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --success: #16a34a;
+      --border: #e5e7eb;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg, #eef4ff, #f9f7ff);
+      color: var(--text);
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 24px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      color: var(--primary-dark);
+      font-size: 2.4rem;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px 18px;
+      margin-bottom: 18px;
+      box-shadow: 0 10px 28px rgba(79, 70, 229, 0.08);
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    label {
+      font-size: 1.05rem;
+      color: var(--text);
+    }
+
+    input, textarea, button {
+      font: inherit;
+    }
+
+    input, textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      background: #fff;
+      color: var(--text);
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 16px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: background 0.2s ease;
+    }
+
+    button:hover {
+      background: var(--primary-dark);
+    }
+
+    .output {
+      margin-top: 12px;
+      background: var(--secondary);
+      color: #1f2937;
+      border-left: 4px solid var(--primary);
+      border-radius: 10px;
+      padding: 12px 14px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      display: none;
+    }
+
+    .output.visible {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Welcome to EduGenie</h1>
+      <p class="subtitle">Your personal AI tutor for learning support</p>
+    </div>
+
+    <div class="card">
+      <form id="qnaForm">
+        <label><strong>Ask EduGenie a Question:</strong></label>
+        <input type="text" id="question" placeholder="Why is the sky blue?" required />
+        <button type="submit">Get Answer</button>
+      </form>
+      <div id="qnaResult" class="output"></div>
+    </div>
+
+    <div class="card">
+      <form id="explainForm">
+        <label><strong>Need an Explanation?</strong></label>
+        <input type="text" id="explainText" placeholder="Photosynthesis" required />
+        <button type="submit">Explain</button>
+      </form>
+      <div id="explainResult" class="output"></div>
+    </div>
+
+    <div class="card">
+      <form id="summaryForm">
+        <label><strong>Summarize a Paragraph</strong></label>
+        <textarea id="summaryText" placeholder="Paste long content to summarize" required></textarea>
+        <button type="submit">Summarize</button>
+      </form>
+      <div id="summaryResult" class="output"></div>
+    </div>
+
+    <div class="card">
+      <form id="quizForm">
+        <label><strong>Generate a Quiz</strong></label>
+        <input type="text" id="quizText" placeholder="Solar System" required />
+        <button type="submit">Generate Quiz</button>
+      </form>
+      <div id="quizResult" class="output"></div>
+    </div>
+  </div>
+
+  <script>
+    function showOutput(elementId, text) {
+      const output = document.getElementById(elementId);
+      output.textContent = text;
+      output.classList.add('visible');
+    }
+
+    document.getElementById('qnaForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+      const question = document.getElementById('question').value.trim();
+      if (!question) return;
+
+      const lower = question.toLowerCase();
+      let answer = 'This is a great question. In simple terms, it depends on the topic and context. Try asking a more specific question so I can give you a clearer explanation.';
+
+      if (lower.includes('sky') && lower.includes('blue')) {
+        answer = 'The sky looks blue because sunlight scatters as it passes through Earth\'s atmosphere. Shorter blue wavelengths scatter more than red ones, so more blue light reaches our eyes from all directions.';
+      } else if (lower.includes('photosynthesis')) {
+        answer = 'Photosynthesis is the process plants use to turn carbon dioxide and water into glucose and oxygen using sunlight. It happens mainly in the leaves, where chlorophyll captures light energy.';
+      } else if (lower.includes('gravity')) {
+        answer = 'Gravity is the force that pulls objects toward one another. On Earth, it keeps us on the ground and keeps planets in orbit around the Sun.';
+      } else if (lower.includes('water cycle')) {
+        answer = 'The water cycle is the continuous movement of water through evaporation, condensation, precipitation, and collection. It helps distribute water across Earth and supports life.';
+      }
+
+      showOutput('qnaResult', answer);
+    });
+
+    document.getElementById('explainForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+      const text = document.getElementById('explainText').value.trim();
+      if (!text) return;
+
+      const topic = text;
+      const explanation = `Here is a simple explanation of ${topic}:\n\n${topic} is an important concept in learning because it helps us understand how things work in the real world. It connects ideas, helps us observe patterns, and makes it easier to explain changes around us. A good way to remember it is to think of it as a building block of knowledge that supports larger ideas and problem-solving.`;
+
+      showOutput('explainResult', explanation);
+    });
+
+    document.getElementById('summaryForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+      const text = document.getElementById('summaryText').value.trim();
+      if (!text) return;
+
+      const sentences = text.split(/[.!?]+/).map(s => s.trim()).filter(Boolean);
+      const summary = sentences.length > 3
+        ? sentences.slice(0, 3).join(' ') + '...'
+        : sentences.join(' ');
+
+      const finalSummary = 'Summary:\n' + summary;
+      showOutput('summaryResult', finalSummary);
+    });
+
+    document.getElementById('quizForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+      const topic = document.getElementById('quizText').value.trim();
+      if (!topic) return;
+
+      const quiz = `Quiz on ${topic}:\n\n1. What is one key idea related to ${topic}?\n   a) Observation\n   b) Random guessing\n   c) Ignoring patterns\n\n2. Why is ${topic} important in learning?\n   a) It helps explain real-world processes\n   b) It makes information less useful\n   c) It has no connection to understanding\n\n3. Which study habit helps you learn ${topic} better?\n   a) Reviewing concepts and asking questions\n   b) Memorizing without understanding\n   c) Avoiding examples\n\nAnswer Key: 1-a, 2-a, 3-a`;
+
+      showOutput('quizResult', quiz);
+    });
+  </script>
+</body>
+</html>
